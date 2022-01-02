@@ -1,37 +1,23 @@
-import { useState, useEffect } from "react";
-import type { NextPage } from "next";
-import { supabase } from "../lib/supabaseClient";
-
-type List = {
-  id: string;
-  created_at: string;
-  name: string;
-};
+import { useState, useEffect } from 'react';
+import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
-  const [list, setList] = useState<List[]>([]);
+  const [list, setList] = useState([]);
 
   const fetchDate = async () => {
     try {
-      const { data, error } = await supabase.from<List>("test").select("*");
+      const res = await fetch('/api/user');
+      const user = await res.json();
 
-      if (error) {
-        throw error;
-      }
-
-      if (data) {
-        setList(data);
-      }
+      setList(user);
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
     }
   };
 
   useEffect(() => {
     fetchDate();
   }, []);
-
-  console.log(list);
 
   return (
     <div>
