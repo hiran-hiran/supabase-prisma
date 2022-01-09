@@ -1,23 +1,10 @@
 import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
+import { Button } from '@chakra-ui/react';
+import { supabase } from '../lib/supabaseClient';
 
 const Home: NextPage = () => {
   const [list, setList] = useState([]);
-
-  const fetchDate = async () => {
-    try {
-      const res = await fetch('/api/user');
-      const user = await res.json();
-
-      setList(user);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDate();
-  }, []);
 
   return (
     <div>
