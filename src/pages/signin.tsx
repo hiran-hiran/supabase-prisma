@@ -1,4 +1,4 @@
-import { Button, Input } from '@chakra-ui/react';
+import { Button, Input, VStack } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -30,13 +30,13 @@ const Signin: NextPage<Props> = () => {
   });
 
   return (
-    <form onSubmit={onSubmit}>
+    <VStack as='form' spacing={5} onSubmit={onSubmit}>
       <Input {...register('email')} placeholder='メールアドレス' type='email' required />
       <Input {...register('password')} placeholder='パスワード' type='password' required />
       <Button type='submit' colorScheme='teal'>
         ログイン
       </Button>
-    </form>
+    </VStack>
   );
 };
 

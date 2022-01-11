@@ -10,6 +10,9 @@ import { Layout } from '../components/shared/layout';
 function MyApp({ Component, pageProps }: AppProps) {
   const { push } = useRouter();
   const session = supabase.auth.session();
+  const authUser = supabase.auth.user();
+
+  // console.log({ session, authUser });
 
   supabase.auth.onAuthStateChange((_event, session) => {
     // console.log('onAuthStateChange', { _event });

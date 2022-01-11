@@ -3,9 +3,9 @@ import { prisma } from '../../lib/prisma';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
-    const data = await prisma.user.findUnique({
+    const data = await prisma.category.findMany({
       where: {
-        id: req.body,
+        authorId: req.body,
       },
     });
     res.status(200).send(data);

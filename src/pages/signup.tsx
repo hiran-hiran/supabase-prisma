@@ -8,7 +8,7 @@ type FormData = {
   password: string;
 };
 
-const Signup: NextPage<Props> = () => {
+const Signup: NextPage = () => {
   const {
     register,
     handleSubmit,
