@@ -13,6 +13,7 @@ import {
 import { useRecoilValue } from 'recoil';
 import { authUserAtom } from '../../recoil/atoms';
 import { useForm } from 'react-hook-form';
+import { axiosClient } from '../../lib/axios';
 
 type Props = {
   isOpen: boolean;
@@ -25,17 +26,27 @@ type FormData = {
 
 export const CategoryModal: VFC<Props> = (props) => {
   const authUser = useRecoilValue(authUserAtom);
-  // console.log({ authUser });
 
   const { register, handleSubmit, resetField } = useForm<FormData>();
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit(async (data) => {
     if (!data.category) {
       return;
     }
-    console.log({ data });
-    props.onClose();
-    resetField('category');
+
+    try {
+      const res = await axiosClient.post('/api/category', {
+        authUserId: authUser.id,
+        title: data.category,
+      });
+
+      console.log({ res });
+
+      props.onClose();
+      resetField('category');
+    } catch (error) {
+      console.log('error', error);
+    }
   });
 
   return (

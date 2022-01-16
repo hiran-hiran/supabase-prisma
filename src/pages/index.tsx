@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import { Button, Flex, Grid, GridItem, useDisclosure } from '@chakra-ui/react';
-import { supabase } from '../lib/supabaseClient';
 import { useRecoilValue } from 'recoil';
 import { authUserAtom } from '../recoil/atoms';
 import Link from 'next/link';
 import { CategoryModal } from '../components/shared/modal';
+import { axiosClient } from '../lib/axios';
 
 const Home: NextPage = () => {
   const [categoies, setCategoies] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const authUser = useRecoilValue(authUserAtom);
 
   const fetchDate = async () => {
@@ -19,12 +18,12 @@ const Home: NextPage = () => {
     }
 
     try {
-      const res = await fetch('/api/category', {
-        method: 'POST',
-        body: JSON.stringify({ id: authUser.id }),
+      const { data } = await axiosClient.get('/api/category', {
+        params: {
+          authUserId: authUser.id,
+        },
       });
-      const categories = await res.json();
-      setCategoies(categories);
+      setCategoies(data);
     } catch (error) {
       console.log('error', error);
     }
@@ -38,7 +37,7 @@ const Home: NextPage = () => {
     <>
       <Grid templateColumns='repeat(3, 1fr)' gap={4}>
         {categoies?.map((category) => (
-          <Link href={`/${category.id}`} key={category.id} passHref>
+          <Link href={`/category/${category.id}`} key={category.id} passHref>
             <GridItem
               as='a'
               h={20}
