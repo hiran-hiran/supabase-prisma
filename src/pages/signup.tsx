@@ -20,8 +20,6 @@ const Signup: NextPage = () => {
       email: data.email,
       password: data.password,
     });
-
-    console.log({ user });
   });
 
   return (

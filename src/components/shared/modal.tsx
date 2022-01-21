@@ -40,8 +40,6 @@ export const CategoryModal: VFC<Props> = (props) => {
         title: data.category,
       });
 
-      console.log({ res });
-
       props.onClose();
       resetField('category');
     } catch (error) {
@@ -52,8 +50,8 @@ export const CategoryModal: VFC<Props> = (props) => {
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <ModalOverlay />
-      <ModalContent color='gray.800'>
-        <ModalHeader>カテゴリの追加</ModalHeader>
+      <ModalContent color='gray.800' w='90%'>
+        <ModalHeader>追加</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Input {...register('category')} placeholder='カテゴリー' type='text' required />

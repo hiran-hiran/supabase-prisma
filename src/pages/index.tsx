@@ -1,42 +1,23 @@
-import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
-import { Button, Flex, Grid, GridItem, useDisclosure } from '@chakra-ui/react';
-import { useRecoilValue } from 'recoil';
-import { authUserAtom } from '../recoil/atoms';
+import { Button, Flex, Grid, GridItem, useDisclosure, Text } from '@chakra-ui/react';
+import { useRecoilValueLoadable } from 'recoil';
 import Link from 'next/link';
 import { CategoryModal } from '../components/shared/modal';
-import { axiosClient } from '../lib/axios';
+import { Category } from '@prisma/client';
+import { categoryState } from '../recoil/category';
 
 const Home: NextPage = () => {
-  const [categoies, setCategoies] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const authUser = useRecoilValue(authUserAtom);
+  const data = useRecoilValueLoadable(categoryState);
 
-  const fetchDate = async () => {
-    if (!authUser) {
-      return null;
-    }
-
-    try {
-      const { data } = await axiosClient.get('/api/category', {
-        params: {
-          authUserId: authUser.id,
-        },
-      });
-      setCategoies(data);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDate();
-  }, [authUser]);
+  if (data.state === 'loading') {
+    return <Text>Loading</Text>;
+  }
 
   return (
     <>
-      <Grid templateColumns='repeat(3, 1fr)' gap={4}>
-        {categoies?.map((category) => (
+      <Grid templateColumns='repeat(2, 1fr)' gap={4}>
+        {data.contents.map((category: Category) => (
           <Link href={`/category/${category.id}`} key={category.id} passHref>
             <GridItem
               as='a'

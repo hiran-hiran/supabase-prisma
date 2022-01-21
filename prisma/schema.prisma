@@ -25,17 +25,19 @@ model Category {
   posts     Post[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  items     Json[]
 }
 
-model Post {
-  id         Int      @id @default(autoincrement())
-  name       String
-  status     STATUS   @default(READY)
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
+// model Post {
+//   id         Int      @id @default(autoincrement())
+//   name       String
+//   amount     Int?
+//   status     STATUS   @default(READY)
+//   category   Category @relation(fields: [categoryId], references: [id])
+//   categoryId Int
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+// }
 
 enum STATUS {
   READY
