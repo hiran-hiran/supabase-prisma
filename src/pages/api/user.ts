@@ -5,7 +5,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
     const data = await prisma.user.findUnique({
       where: {
-        id: req.body,
+        id: req.query.id as string,
       },
     });
     res.status(200).send(data);

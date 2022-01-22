@@ -16,20 +16,22 @@ import {
   Input,
   Text,
   VStack,
+  FormControl,
 } from '@chakra-ui/react';
 import { useRecoilValueLoadable, useRecoilValue, useRecoilStateLoadable } from 'recoil';
 import { useRouter } from 'next/router';
 import { Category } from '@prisma/client';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { categoryState } from '../../recoil/category';
-import { STATUS } from '../../lib/type';
 import { createDefaultValues } from '../../components/category/functions';
 import { axiosClient } from '../../lib/axios';
 
 type FormData = {
-  name: string;
-  amount: number;
-  status: STATUS;
+  items: {
+    name: string;
+    amount: number;
+    status: boolean;
+  }[];
 };
 
 const Home: NextPage = () => {
@@ -39,7 +41,7 @@ const Home: NextPage = () => {
   const [appendText, setAppendText] = useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { register, handleSubmit, resetField, getValues, control } = useForm<FormData>({
+  const { register, handleSubmit, resetField, control } = useForm<FormData>({
     defaultValues: createDefaultValues(data, query),
   });
 
@@ -56,7 +58,6 @@ const Home: NextPage = () => {
       });
 
       onClose();
-      resetField('name');
     } catch (error) {
       console.log('error', error);
     }
