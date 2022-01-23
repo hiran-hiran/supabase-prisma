@@ -54,8 +54,6 @@ const Category: NextPage = memo(() => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('handleSubmit', { data });
-
     try {
       const res = await axiosClient.put('/api/items', {
         id: query.id,
