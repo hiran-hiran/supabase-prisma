@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import {
   Button,
@@ -25,33 +25,37 @@ import { categoryState } from '../../recoil/category';
 import { createDefaultValues } from '../../components/category/functions';
 import { axiosClient } from '../../lib/axios';
 import dayjs from 'dayjs';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 type FormData = {
   items: {
+    id: string;
     name: string;
     amount: number;
     status: boolean;
   }[];
 };
 
-const Category: NextPage = () => {
+const Category: NextPage = memo(() => {
+  const { query } = useRouter();
   const [items, _] = useRecoilStateLoadable(categoryState);
   const refresh = useRecoilRefresher_UNSTABLE(categoryState);
-  const { query } = useRouter();
   const [appendText, setAppendText] = useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { register, handleSubmit, resetField, control } = useForm<FormData>({
+  const { register, handleSubmit, control, watch } = useForm<FormData>({
     defaultValues: createDefaultValues(items, query),
   });
 
-  const { fields, append, prepend } = useFieldArray({
+  const { fields, append, prepend, move } = useFieldArray({
     control,
     name: 'items',
   });
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log('handleSubmit', { data });
+
     try {
       const res = await axiosClient.put('/api/items', {
         id: query.id,
@@ -74,7 +78,13 @@ const Category: NextPage = () => {
     return <Text>Error</Text>;
   }
 
-  const itemData = items.contents.find((item) => item.id === Number(query.id));
+  const itemData = createDefaultValues(items, query);
+
+  function handleOnDragEnd({ source, destination }) {
+    if (destination) {
+      move(source.index, destination.index);
+    }
+  }
 
   return (
     <Box>
@@ -87,20 +97,45 @@ const Category: NextPage = () => {
           保存
         </Button>
       </Flex>
-      <VStack spacing={4} mt={4}>
-        {fields.map((field, index) => (
-          <Flex key={field.id} justify={'space-between'} w='full'>
-            <Checkbox {...register(`items.${index}.status`)}>{field.name}</Checkbox>
-            <Input
-              {...register(`items.${index}.amount`)}
-              w={20}
-              type={'number'}
-              p={2}
-              textAlign={'center'}
-            />
-          </Flex>
-        ))}
-      </VStack>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId='categoryItems'>
+          {(provided) => (
+            <VStack spacing={4} mt={4} {...provided.droppableProps} ref={provided.innerRef}>
+              {fields.map((field, index) => {
+                return (
+                  <Draggable key={field.id} draggableId={field.id} index={index}>
+                    {(provided) => (
+                      <Flex
+                        key={field.id}
+                        justify={'space-between'}
+                        w='full'
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <Checkbox {...register(`items.${index}.status`)}>{field.name}</Checkbox>
+                        <Input
+                          {...register(`items.${index}.amount`)}
+                          w={20}
+                          type={'number'}
+                          p={2}
+                          textAlign={'center'}
+                        />
+                        <Input
+                          type={'hidden'}
+                          {...register(`items.${index}.id`)}
+                          value={field.id}
+                        />
+                      </Flex>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
+            </VStack>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       <Flex mt={5} justify='center'>
         <Button colorScheme='blue' onClick={onOpen}>
@@ -136,6 +171,6 @@ const Category: NextPage = () => {
       </Modal>
     </Box>
   );
-};
+});
 
 export default Category;

@@ -5,5 +5,7 @@ export const createDefaultValues = (items, query) => {
 
   const itemData = items.contents.find((item) => item.id === Number(query.id));
 
-  return itemData;
+  console.log('itemData.items', itemData.items);
+
+  return { items: itemData.items };
 };
