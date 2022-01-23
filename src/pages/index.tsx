@@ -10,8 +10,12 @@ const Home: NextPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const data = useRecoilValueLoadable(categoryState);
 
-  if (data.state === 'loading') {
+  if (!data || data.state === 'loading') {
     return <Text>Loading</Text>;
+  }
+
+  if (data.state === 'hasError') {
+    return <Text>Error</Text>;
   }
 
   return (

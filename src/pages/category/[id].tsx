@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { NextPage } from 'next';
 import {
   Button,
@@ -16,9 +16,8 @@ import {
   Input,
   Text,
   VStack,
-  FormControl,
 } from '@chakra-ui/react';
-import { useRecoilValueLoadable, useRecoilValue, useRecoilStateLoadable } from 'recoil';
+import { useRecoilStateLoadable } from 'recoil';
 import { useRouter } from 'next/router';
 import { Category } from '@prisma/client';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -34,15 +33,15 @@ type FormData = {
   }[];
 };
 
-const Home: NextPage = () => {
-  const data = useRecoilValueLoadable(categoryState);
+const Category: NextPage = () => {
   const [items, setItems] = useRecoilStateLoadable(categoryState);
   const { query } = useRouter();
   const [appendText, setAppendText] = useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const { register, handleSubmit, resetField, control } = useForm<FormData>({
-    defaultValues: createDefaultValues(data, query),
+    defaultValues: createDefaultValues(items, query),
   });
 
   const { fields, append, prepend } = useFieldArray({
@@ -63,8 +62,12 @@ const Home: NextPage = () => {
     }
   });
 
-  if (data.state === 'loading') {
+  if (!items || items.state === 'loading') {
     return <Text>Loading</Text>;
+  }
+
+  if (items.state === 'hasError') {
+    return <Text>Error</Text>;
   }
 
   const itemData = items.contents.find((item) => item.id === Number(query.id));
@@ -130,4 +133,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Category;
