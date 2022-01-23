@@ -17,13 +17,14 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useRecoilStateLoadable } from 'recoil';
+import { useRecoilRefresher_UNSTABLE, useRecoilStateLoadable } from 'recoil';
 import { useRouter } from 'next/router';
 import { Category } from '@prisma/client';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { categoryState } from '../../recoil/category';
 import { createDefaultValues } from '../../components/category/functions';
 import { axiosClient } from '../../lib/axios';
+import dayjs from 'dayjs';
 
 type FormData = {
   items: {
@@ -34,7 +35,8 @@ type FormData = {
 };
 
 const Category: NextPage = () => {
-  const [items, setItems] = useRecoilStateLoadable(categoryState);
+  const [items, _] = useRecoilStateLoadable(categoryState);
+  const refresh = useRecoilRefresher_UNSTABLE(categoryState);
   const { query } = useRouter();
   const [appendText, setAppendText] = useState('');
 
@@ -56,7 +58,9 @@ const Category: NextPage = () => {
         items: data.items,
       });
 
-      onClose();
+      if (res.status === 200) {
+        refresh();
+      }
     } catch (error) {
       console.log('error', error);
     }
@@ -77,11 +81,12 @@ const Category: NextPage = () => {
       <Text fontSize={'2xl'} textAlign={'center'}>
         {itemData.title}
       </Text>
-      <Box textAlign={'right'}>
+      <Flex justifyContent={'space-between'} align={'center'}>
+        <Text>{dayjs(itemData.updatedAt).format('YYYY年M月DD日 HH:mm')}</Text>
         <Button colorScheme='green' onClick={(data) => onSubmit(data)}>
           保存
         </Button>
-      </Box>
+      </Flex>
       <VStack spacing={4} mt={4}>
         {fields.map((field, index) => (
           <Flex key={field.id} justify={'space-between'} w='full'>

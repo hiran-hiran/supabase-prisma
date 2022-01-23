@@ -6,20 +6,17 @@ import { supabase } from '../lib/supabaseClient';
 import { useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
 import { Layout } from '../components/shared/layout';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
+
+dayjs.locale('ja');
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { push } = useRouter();
   const session = supabase.auth.session();
-  // const authUser = supabase.auth.user();
 
-  // console.log({ session, authUser });
-
-  supabase.auth.onAuthStateChange((_event, session) => {
-    // console.log('onAuthStateChange', { _event });
-    // console.log('onAuthStateChange', { session });
-  });
-
-  // console.log('_app', { session });
+  // supabase.auth.onAuthStateChange((_event, session) => {
+  // });
 
   useEffect(() => {
     if (!session?.user) {

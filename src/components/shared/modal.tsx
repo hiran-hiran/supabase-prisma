@@ -18,6 +18,7 @@ import { axiosClient } from '../../lib/axios';
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  refresh: () => void;
 };
 
 type FormData = {
@@ -40,8 +41,11 @@ export const CategoryModal: VFC<Props> = (props) => {
         title: data.category,
       });
 
-      props.onClose();
-      resetField('category');
+      if (res.status === 200) {
+        props.onClose();
+        resetField('category');
+        props.refresh();
+      }
     } catch (error) {
       console.log('error', error);
     }

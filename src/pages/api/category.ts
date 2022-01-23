@@ -32,6 +32,19 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       }
       break;
 
+    case 'DELETE':
+      try {
+        const data = await prisma.category.delete({
+          where: {
+            id: Number(req.query.categoryId),
+          },
+        });
+        res.status(200).send(data);
+      } catch (error) {
+        console.log(error);
+      }
+      break;
+
     default:
       break;
   }
