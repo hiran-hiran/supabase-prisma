@@ -24,8 +24,6 @@ export const Layout: VFC<Props> = ({ children }) => {
   const authUser = supabase.auth.user();
   const [_, setAuthUser] = useRecoilState(authUserAtom);
 
-  console.log({ userData, authUser });
-
   const fetchDate = async () => {
     if (!authUser) {
       return null;
