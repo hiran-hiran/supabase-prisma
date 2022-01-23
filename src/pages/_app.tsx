@@ -10,7 +10,7 @@ import { Layout } from '../components/shared/layout';
 function MyApp({ Component, pageProps }: AppProps) {
   const { push } = useRouter();
   const session = supabase.auth.session();
-  const authUser = supabase.auth.user();
+  // const authUser = supabase.auth.user();
 
   // console.log({ session, authUser });
 
