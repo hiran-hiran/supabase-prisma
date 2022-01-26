@@ -76,13 +76,13 @@ const Category: NextPage = memo(() => {
     return <Text>Error</Text>;
   }
 
-  const itemData = createDefaultValues(items, query);
+  const itemData = items.contents.find((item) => item.id === Number(query.id));
 
-  function handleOnDragEnd({ source, destination }) {
+  const handleOnDragEnd = ({ source, destination }) => {
     if (destination) {
       move(source.index, destination.index);
     }
-  }
+  };
 
   return (
     <Box>
