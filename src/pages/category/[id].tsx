@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useState } from 'react';
 import type { NextPage } from 'next';
 import {
   Button,
@@ -16,6 +16,7 @@ import {
   Input,
   Text,
   VStack,
+  HStack,
 } from '@chakra-ui/react';
 import { useRecoilRefresher_UNSTABLE, useRecoilStateLoadable } from 'recoil';
 import { useRouter } from 'next/router';
@@ -26,6 +27,7 @@ import { createDefaultValues } from '../../components/category/functions';
 import { axiosClient } from '../../lib/axios';
 import dayjs from 'dayjs';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DeleteIcon } from '@chakra-ui/icons';
 
 type FormData = {
   items: {
@@ -48,7 +50,7 @@ const Category: NextPage = memo(() => {
     defaultValues: createDefaultValues(items, query),
   });
 
-  const { fields, append, prepend, move } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
     name: 'items',
   });
@@ -112,13 +114,18 @@ const Category: NextPage = memo(() => {
                         {...provided.dragHandleProps}
                       >
                         <Checkbox {...register(`items.${index}.status`)}>{field.name}</Checkbox>
-                        <Input
-                          {...register(`items.${index}.amount`)}
-                          w={20}
-                          type={'number'}
-                          p={2}
-                          textAlign={'center'}
-                        />
+
+                        <HStack>
+                          <Input
+                            {...register(`items.${index}.amount`)}
+                            w={20}
+                            type={'number'}
+                            p={2}
+                            textAlign={'center'}
+                          />
+                          <DeleteIcon onClick={() => remove(index)} color={'red.400'} />
+                        </HStack>
+
                         <Input
                           type={'hidden'}
                           {...register(`items.${index}.id`)}
