@@ -75,7 +75,7 @@ const Home: NextPage = () => {
         ))}
       </Grid>
       <Flex mt={5}>
-        <Button mx='auto' color='gray.800' onClick={onOpen}>
+        <Button mx='auto' colorScheme='blue' onClick={onOpen}>
           追加
         </Button>
         <CategoryModal isOpen={isOpen} onClose={onClose} refresh={refresh} />

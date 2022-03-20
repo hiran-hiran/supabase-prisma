@@ -17,6 +17,7 @@ import {
   Text,
   VStack,
   HStack,
+  Spacer,
 } from '@chakra-ui/react';
 import { useRecoilRefresher_UNSTABLE, useRecoilStateLoadable } from 'recoil';
 import { useRouter } from 'next/router';
@@ -28,6 +29,7 @@ import { axiosClient } from '../../lib/axios';
 import dayjs from 'dayjs';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { DeleteIcon } from '@chakra-ui/icons';
+import { CategoryTitle } from '../../components/category';
 
 type FormData = {
   items: {
@@ -88,19 +90,19 @@ const Category: NextPage = memo(() => {
 
   return (
     <Box>
-      <Text fontSize={'2xl'} textAlign={'center'}>
-        {itemData.title}
-      </Text>
+      <CategoryTitle title={itemData.title} />
+      <Spacer h={5} />
       <Flex justifyContent={'space-between'} align={'center'}>
         <Text>{dayjs(itemData.updatedAt).format('YYYY年M月DD日 HH:mm')}</Text>
         <Button colorScheme='green' onClick={(data) => onSubmit(data)}>
           保存
         </Button>
       </Flex>
+      <Spacer h={5} />
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId='categoryItems'>
           {(provided) => (
-            <VStack spacing={4} mt={4} {...provided.droppableProps} ref={provided.innerRef}>
+            <VStack spacing={4} {...provided.droppableProps} ref={provided.innerRef}>
               {fields.map((field, index) => {
                 return (
                   <Draggable key={field.id} draggableId={field.id} index={index}>
@@ -141,8 +143,8 @@ const Category: NextPage = memo(() => {
           )}
         </Droppable>
       </DragDropContext>
-
-      <Flex mt={5} justify='center'>
+      <Spacer h={5} />
+      <Flex justify='center'>
         <Button colorScheme='blue' onClick={onOpen}>
           追加
         </Button>
