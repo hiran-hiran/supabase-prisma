@@ -1,11 +1,11 @@
-import { VFC } from 'react';
+import { FC } from 'react';
 import { Text } from '@chakra-ui/react';
 
 type Props = {
   title: string;
 };
 
-export const CategoryTitle: VFC<Props> = ({ title }) => {
+export const CategoryTitle: FC<Props> = ({ title }) => {
   if (!title) {
     return null;
   }

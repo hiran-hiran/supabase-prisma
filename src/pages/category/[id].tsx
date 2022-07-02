@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { memo, useState } from 'react';
 import type { NextPage } from 'next';
 import {
@@ -21,7 +22,6 @@ import {
 } from '@chakra-ui/react';
 import { useRecoilRefresher_UNSTABLE, useRecoilStateLoadable } from 'recoil';
 import { useRouter } from 'next/router';
-import { Category } from '@prisma/client';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { categoryState } from '../../recoil/category';
 import { createDefaultValues } from '../../components/category/functions';
@@ -180,4 +180,4 @@ const Category: NextPage = memo(() => {
   );
 });
 
-export default Category;
+export default CategoryId;
