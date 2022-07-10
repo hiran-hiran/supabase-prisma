@@ -40,7 +40,7 @@ type FormData = {
   }[];
 };
 
-const Category: NextPage = memo(() => {
+const CategoryId: NextPage = memo(() => {
   const { query } = useRouter();
   const [items, _] = useRecoilStateLoadable(categoryState);
   const refresh = useRecoilRefresher_UNSTABLE(categoryState);
